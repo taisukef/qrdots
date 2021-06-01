@@ -1,0 +1,57 @@
+<meta charset="utf-8"><script type="module">
+import { add, style } from "https://js.sabae.cc/stdom.js";
+import { QR } from "https://taisukef.github.io/qrcode-generator/es/QR.js";
+import { extendUI } from "https://js.sabae.cc/extendUI.js";
+
+onload = () => {
+  style({ body: { margin: 0, background: "gray" }});
+  const data = QR.encode("https://jig.jp/", 0);
+  console.log(data);
+
+  const w = 4;
+  const r = 20;
+  const iw = data.length;
+  const qw = (iw + w * 2) * r;
+
+  const canvas = add("canvas");
+  canvas.width = canvas.height = qw;
+  const g = canvas.getContext("2d");
+
+  const draw = () => {
+    const idata = new Uint8ClampedArray(qw * qw * 4);
+    for (let i = 0; i < idata.length / 4; i++) {
+      idata[i * 4 + 0] = 255;
+      idata[i * 4 + 1] = 255;
+      idata[i * 4 + 2] = 255;
+      idata[i * 4 + 3] = 255;
+    }
+    for (let i = 0; i < iw; i++) {
+      for (let j = 0; j < iw; j++) {
+        const c = data[i][j] ? 0 : 255;
+        for (let k = 0; k < r * r; k++) {
+          const x = (i + w) * r + Math.floor(k / r);
+          const y = (j + w) * r + (k % r);
+          idata[(x + y * qw) * 4] = c;
+          idata[(x + y * qw) * 4 + 1] = c;
+          idata[(x + y * qw) * 4 + 2] = c;
+          idata[(x + y * qw) * 4 + 3] = 255;
+        }
+      }
+    }
+    const imgdata = new ImageData(idata, qw, qw);
+    g.putImageData(imgdata, 0, 0);
+  };
+  draw();
+
+  extendUI(canvas);
+  canvas.onuidown = (cx, cy) => {
+    const x = Math.floor(cx / r) - w;
+    const y = Math.floor(cy / r) - w;
+    if (x >= 0 && x < iw && y >= 0 && y < iw) {
+      data[x][y] = data[x][y] == 0 ? 1 : 0;
+      draw();
+    }
+  };
+};
+
+</script>
