@@ -2,7 +2,8 @@
 
 - https://taisukef.github.io/qrdots/
 
-![screenshot (16)](https://user-images.githubusercontent.com/1715217/120563431-8b120900-c443-11eb-8769-69e3dca1c041.gif) 
+
+![screenshot (27)](https://user-images.githubusercontent.com/1715217/120565688-961b6800-c448-11eb-9051-69d3507c6351.gif)
 
 ## applications
 
