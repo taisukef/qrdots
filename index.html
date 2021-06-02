@@ -41,7 +41,12 @@ onload = () => {
     const errlevel = parseInt(sel.value);
     const tnum = parseInt(typenum.value);
     const val = inp.value;
-    let data = QR.encode(val, errlevel, tnum);
+    let data = [[0]];
+    try {
+      data = QR.encode(val, errlevel, tnum);
+    } catch (e) {
+      console.log(e); // overflow
+    }
 
     const iw = data.length;
     const w = 4;
