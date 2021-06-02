@@ -8,6 +8,7 @@ onload = () => {
 
   const inp = add("input");
   const sel = add("select");
+  const typenum = add("select");
   add("br");
   const levels = "LMQH";
   let idx = 0;
@@ -17,19 +18,27 @@ onload = () => {
     opt.value = idx++;
     sel.appendChild(opt);
   }
+  for (let i = 0; i <= 40; i++) {
+    const opt = create("option");
+    opt.textContent = i;
+    opt.value = i;
+    typenum.appendChild(opt);
+  }
 
   const canvas = add("canvas");
   const g = canvas.getContext("2d");
   extendUI(canvas);
 
   const show = () => {
-    const level = parseInt(sel.value);
+    const errlevel = parseInt(sel.value);
+    const tnum = parseInt(typenum.value);
     const val = inp.value;
-    let data = QR.encode(val, level);
+    let data = QR.encode(val, errlevel, tnum);
 
-    const w = 4;
-    const r = 20;
     const iw = data.length;
+    const w = 4;
+    const cw = document.body.clientWidth;
+    const r = Math.floor(cw / (iw + w * 2)) || 1;
     const qw = (iw + w * 2) * r;
 
     canvas.width = canvas.height = qw;
@@ -72,6 +81,7 @@ onload = () => {
   show();
   inp.onkeyup = show;
   sel.onchange = show;
+  typenum.onchange = show;
 };
 
 </script>
