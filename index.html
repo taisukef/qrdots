@@ -1,11 +1,16 @@
 <meta charset="utf-8"><script type="module">
-import { create, add, style } from "https://js.sabae.cc/stdom.js";
+import { create, add, style, link } from "https://js.sabae.cc/stdom.js";
 import { QR } from "https://taisukef.github.io/qrcode-generator/es/QR.js";
 import { extendUI } from "https://js.sabae.cc/extendUI.js";
 
 onload = () => {
-  style({ body: { margin: 0, background: "gray" }});
+  style({
+    body: { margin: 0, background: "#f0f0f0", "text-align": "center" },
+    "*": { margin: ".5em 0" },
+    a: { color: "gray !important" },
+  });
 
+  add("h1", "qrdots");
   const inp = add("input");
   const sel = add("select");
   const typenum = add("select");
@@ -16,6 +21,7 @@ onload = () => {
     const opt = create("option");
     opt.textContent = c;
     opt.value = idx++;
+    opt.selected = c == "H";
     sel.appendChild(opt);
   }
   for (let i = 0; i <= 40; i++) {
@@ -28,6 +34,8 @@ onload = () => {
   const canvas = add("canvas");
   const g = canvas.getContext("2d");
   extendUI(canvas);
+
+  link("qrdots src on GitHub", "https://github.com/taisukef/qrdots/");
 
   const show = () => {
     const errlevel = parseInt(sel.value);
