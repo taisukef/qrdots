@@ -3,6 +3,20 @@ import { create, add, style, link } from "https://js.sabae.cc/stdom.js";
 import { QR } from "https://taisukef.github.io/qrcode-generator/es/QR.js";
 import { extendUI } from "https://js.sabae.cc/extendUI.js";
 
+onkeydown = async (e) => {
+  if (e.key == "F3") {
+    if (!globalThis.capture5sec_gif) {
+      globalThis.capture5sec_gif = (await import("https://taisukef.github.io/capture5sec.js/gif-capture5sec.js")).capture5sec;
+    }
+    capture5sec_gif();
+  } else if (e.key == "F4") {
+    if (!globalThis.capture5sec_mp4) {
+      globalThis.capture5sec_mp4 = (await import("https://taisukef.github.io/capture5sec.js/mp4-capture5sec.js")).capture5sec;
+    }
+    capture5sec_mp4();
+  }
+};
+
 onload = () => {
   style({
     body: { margin: 0, background: "#f0f0f0", "text-align": "center" },
@@ -82,13 +96,36 @@ onload = () => {
     };
     draw();
 
-    canvas.onuidown = (cx, cy) => {
+    let drag = false;
+    let lastx = -1;
+    let lasty = -1;
+    let color = 0;
+    const set = (cx, cy, color = -1) => {
       const x = Math.floor(cx / r) - w;
       const y = Math.floor(cy / r) - w;
       if (x >= 0 && x < iw && y >= 0 && y < iw) {
-        data[x][y] = data[x][y] == 0 ? 1 : 0;
-        draw();
+        if (lastx != x || lasty != y) {
+          data[x][y] = color == -1 ? (data[x][y] == 0 ? 1 : 0) : color;
+          lastx = x;
+          lasty = y;
+          draw();
+          return data[x][y];
+        }
       }
+    };
+    canvas.onuidown = (cx, cy) => {
+      drag = true;
+      color = set(cx, cy);
+    };
+    canvas.onuiup = () => {
+      drag = false;
+      lastx = lasty = -1;
+    };
+    canvas.onuimove = (cx, cy) => {
+      if (!drag) {
+        return;
+      }
+      set(cx, cy, color);
     };
   };
   show();
