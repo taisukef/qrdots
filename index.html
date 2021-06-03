@@ -49,6 +49,7 @@ onload = () => {
   const g = canvas.getContext("2d");
   extendUI(canvas);
 
+  add("br");
   link("qrdots src on GitHub", "https://github.com/taisukef/qrdots/");
 
   const show = () => {
@@ -64,7 +65,7 @@ onload = () => {
 
     const iw = data.length;
     const w = 4;
-    const cw = document.body.clientWidth;
+    const cw = Math.min(document.body.clientWidth, 600);
     const r = Math.floor(cw / (iw + w * 2)) || 1;
     const qw = (iw + w * 2) * r;
 
